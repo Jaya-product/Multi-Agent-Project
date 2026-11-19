@@ -1,0 +1,35 @@
+version: "3.8"
+
+services:
+  dubai-travel-planner:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: dubai-ai-travel-planner
+    restart: unless-stopped
+    ports:
+      - "8501:8501"
+    env_file:
+      - .env
+    environment:
+      - LLM_PROVIDER=${LLM_PROVIDER:-google}
+      - LLM_MODEL_NAME=${LLM_MODEL_NAME:-gemini-2.5-flash}
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - GROQ_API_KEY=${GROQ_API_KEY}
+      - SQLITE_DB_PATH=/app/data/database/dubai_travel.db
+      - ENABLE_WEATHER_INTEGRATION=true
+      - ENABLE_OSRM_ROUTING=true
+      - ENABLE_HUMAN_IN_THE_LOOP=false
+    volumes:
+      # Persistent storage volume for SQLite database
+      - travel-db-data:/app/data/database
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:8501/_stcore/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+volumes:
+  travel-db-data:
+    driver: local

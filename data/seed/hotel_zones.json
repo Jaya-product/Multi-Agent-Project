@@ -1,0 +1,65 @@
+[
+  {
+    "zone_id": "zone_deira",
+    "neighborhood": "Deira",
+    "avg_budget_rate_aed": 180.0,
+    "avg_midscale_rate_aed": 360.0,
+    "avg_luxury_rate_aed": 850.0,
+    "metro_accessible": true,
+    "description": "Historic trading hub, traditional gold and spice souks, creek waterfront with budget-friendly stays"
+  },
+  {
+    "zone_id": "zone_bur_dubai",
+    "neighborhood": "Bur Dubai",
+    "avg_budget_rate_aed": 190.0,
+    "avg_midscale_rate_aed": 380.0,
+    "avg_luxury_rate_aed": 900.0,
+    "metro_accessible": true,
+    "description": "Heritage heart of Dubai, Al Fahidi Historical Neighbourhood, rich museums and textile markets"
+  },
+  {
+    "zone_id": "zone_downtown",
+    "neighborhood": "Downtown",
+    "avg_budget_rate_aed": 420.0,
+    "avg_midscale_rate_aed": 750.0,
+    "avg_luxury_rate_aed": 1800.0,
+    "metro_accessible": true,
+    "description": "Epicenter of modern Dubai with Burj Khalifa, Dubai Mall, Dubai Opera and world-class fine dining"
+  },
+  {
+    "zone_id": "zone_jumeirah",
+    "neighborhood": "Jumeirah",
+    "avg_budget_rate_aed": 320.0,
+    "avg_midscale_rate_aed": 650.0,
+    "avg_luxury_rate_aed": 2200.0,
+    "metro_accessible": false,
+    "description": "Upscale coastal strip with pristine beaches, trendy cafes, boutique resorts and sea views"
+  },
+  {
+    "zone_id": "zone_al_barsha",
+    "neighborhood": "Al Barsha",
+    "avg_budget_rate_aed": 220.0,
+    "avg_midscale_rate_aed": 420.0,
+    "avg_luxury_rate_aed": 950.0,
+    "metro_accessible": true,
+    "description": "Central shopping and transit corridor next to Mall of the Emirates and Red Line Metro"
+  },
+  {
+    "zone_id": "zone_dubai_marina",
+    "neighborhood": "Dubai Marina",
+    "avg_budget_rate_aed": 380.0,
+    "avg_midscale_rate_aed": 720.0,
+    "avg_luxury_rate_aed": 1650.0,
+    "metro_accessible": true,
+    "description": "Vibrant waterfront district with marina promenade, JBR beach, watersports and lively nightlife"
+  },
+  {
+    "zone_id": "zone_palm_jumeirah",
+    "neighborhood": "Palm Jumeirah",
+    "avg_budget_rate_aed": 550.0,
+    "avg_midscale_rate_aed": 1100.0,
+    "avg_luxury_rate_aed": 2800.0,
+    "metro_accessible": false,
+    "description": "Iconic palm-shaped archipelago featuring ultra-luxury resorts, beach clubs, and waterparks"
+  }
+]

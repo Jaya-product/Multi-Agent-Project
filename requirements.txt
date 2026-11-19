@@ -1,0 +1,16 @@
+pydantic>=2.7.0
+pydantic-settings>=2.2.0
+langchain>=0.2.0
+langchain-core>=0.2.0
+langgraph>=0.1.0
+langchain-google-genai>=1.0.0
+requests>=2.31.0
+tenacity>=8.3.0
+pytest>=8.0.0
+python-dotenv>=1.0.0
+streamlit>=1.35.0
+plotly>=5.20.0
+folium>=0.16.0
+streamlit-folium>=0.20.0
+pydeck>=0.8.0
+langchain-groq>=1.2.0
