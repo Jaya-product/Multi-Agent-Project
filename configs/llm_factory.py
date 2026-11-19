@@ -6,19 +6,36 @@ from configs.settings import AppSettings, get_settings
 
 
 def get_llm(settings: Optional[AppSettings] = None) -> Any:
-    """Instantiate configured LangChain chat model based on AppSettings."""
+    """Instantiate configured LangChain chat model based on AppSettings with resilient fallback."""
     cfg = settings or get_settings()
 
     if cfg.llm_provider == "google":
         try:
             from langchain_google_genai import ChatGoogleGenerativeAI
             api_key = cfg.google_api_key or cfg.llm_api_key or os.getenv("GOOGLE_API_KEY")
+
+            # If Google key is an internal token (starts with AQ.) or missing, and Groq key is present:
+            if (not api_key or api_key.startswith("AQ.")) and (cfg.groq_api_key or os.getenv("GROQ_API_KEY")):
+                from langchain_groq import ChatGroq
+                groq_key = cfg.groq_api_key or os.getenv("GROQ_API_KEY")
+                return ChatGroq(
+                    model="llama-3.3-70b-versatile",
+                    groq_api_key=groq_key,
+                    temperature=cfg.llm_temperature,
+                    max_tokens=cfg.llm_max_tokens,
+                )
+
             if not api_key:
                 raise ValueError(
                     "Google API key not found. Please set GOOGLE_API_KEY in your .env file, "
                     "environment variables, or Streamlit Secrets (see deployment.md)."
                 )
-            model = cfg.llm_model_name if cfg.llm_model_name and cfg.llm_model_name != "gemini-2.5-flash" else "gemini-3.8-flash"
+
+            # Valid public Gemini models
+            model = cfg.llm_model_name
+            if not model or not model.startswith("gemini-") or model in ("gemini-2.5-flash", "gemini-3.8-flash"):
+                model = "gemini-1.5-flash"
+
             return ChatGoogleGenerativeAI(
                 model=model,
                 google_api_key=api_key,
@@ -40,7 +57,9 @@ def get_llm(settings: Optional[AppSettings] = None) -> Any:
                     "Groq API key not found. Please set GROQ_API_KEY in your .env file, "
                     "environment variables, or Streamlit Secrets (see deployment.md)."
                 )
-            model = cfg.llm_model_name if cfg.llm_model_name and "gemini" not in cfg.llm_model_name else "llama-3.3-70b-versatile"
+            model = cfg.llm_model_name
+            if not model or model.startswith("gemini-"):
+                model = "llama-3.3-70b-versatile"
             return ChatGroq(
                 model=model,
                 groq_api_key=api_key,

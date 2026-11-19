@@ -210,14 +210,32 @@ with st.sidebar:
     st.markdown("---")
     st.subheader("Multi-Agent Runtime")
 
-    llm_provider = st.selectbox("LLM Provider:", ["google", "groq", "openai", "ollama"], index=0)
+    providers = ["groq", "google", "openai", "ollama"]
+    google_key_valid = (os.getenv("GOOGLE_API_KEY") or "").startswith("AIzaSy")
+    groq_key_valid = bool(os.getenv("GROQ_API_KEY"))
+
+    default_prov = "google" if google_key_valid else ("groq" if groq_key_valid else "groq")
+    prov_idx = providers.index(default_prov) if default_prov in providers else 0
+
+    llm_provider = st.selectbox("LLM Provider:", providers, index=prov_idx)
     default_model = {
-        "google": "gemini-2.5-flash",
         "groq": "llama-3.3-70b-versatile",
+        "google": "gemini-1.5-flash",
         "openai": "gpt-4o",
         "ollama": "llama3",
-    }.get(llm_provider, "gemini-2.5-flash")
+    }.get(llm_provider, "llama-3.3-70b-versatile")
     model_name = st.text_input("Model Name:", value=default_model)
+
+    with st.expander("🔑 API Key Configuration", expanded=not (google_key_valid or groq_key_valid)):
+        st.caption("Enter key here if not pre-configured in Streamlit Secrets or environment variables.")
+        if llm_provider == "groq":
+            custom_groq = st.text_input("Groq API Key:", type="password", value=os.getenv("GROQ_API_KEY", ""), key="groq_input_key")
+            if custom_groq:
+                os.environ["GROQ_API_KEY"] = custom_groq
+        elif llm_provider == "google":
+            custom_google = st.text_input("Google AI Studio Key:", type="password", value=os.getenv("GOOGLE_API_KEY", ""), key="google_input_key")
+            if custom_google:
+                os.environ["GOOGLE_API_KEY"] = custom_google
 
     enable_hitl = st.toggle(
         "Enable Human-in-the-Loop Review Gate",
@@ -337,10 +355,12 @@ def run_workflow_stream(
         st.session_state.is_paused = False
 
         status_container.update(label="🎉 Itinerary Generated & Validated!", state="complete", expanded=False)
+        st.rerun()
 
     except Exception as e:
         status_container.update(label=f"❌ Execution Error: {str(e)}", state="error", expanded=True)
         st.session_state.error_log.append(str(e))
+        st.error(f"❌ **Execution Error:** {str(e)}")
 
 
 def resume_workflow():
@@ -368,10 +388,12 @@ def resume_workflow():
         st.session_state.paused_state = None
 
         status_container.update(label="🎉 Validated Itinerary Ready!", state="complete", expanded=False)
+        st.rerun()
 
     except Exception as e:
         status_container.update(label=f"❌ Resume Error: {str(e)}", state="error", expanded=True)
         st.session_state.error_log.append(str(e))
+        st.error(f"❌ **Resume Error:** {str(e)}")
 
 
 # Trigger execution when user clicks button
